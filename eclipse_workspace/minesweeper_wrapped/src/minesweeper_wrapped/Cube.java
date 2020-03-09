@@ -15,9 +15,9 @@ public class Cube implements GLEventListener {
 
 	public static DisplayMode dm, dm_old;
 	private GLU glu = new GLU();
-	private float xquad = 0.0f;
-	private float yquad = 0.0f;
-	private float zquad = 0.0f;
+	private static float xquad = 0.0f;
+	private static float yquad = 0.0f;
+	private static float zquad = 0.0f;
 
 	private static float xrot = 0.0f;
 	private static float yrot = 0.0f;
@@ -25,6 +25,9 @@ public class Cube implements GLEventListener {
 
 
 	final static GLProfile profile = GLProfile.get(GLProfile.GL2);
+	final private static int CANVAS_HEIGHT = 400;
+	final private static int CANVAS_WIDTH = 400;
+	
 	static GLCapabilities capabilities = new GLCapabilities(profile);
 	final static GLCanvas glcanvas = new GLCanvas(capabilities);
 	final static FPSAnimator animator = new FPSAnimator(glcanvas, 300, true);
@@ -35,7 +38,8 @@ public class Cube implements GLEventListener {
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
 		gl.glLoadIdentity();
 		gl.glTranslatef(0f, 0f, -5.0f);
-		// Rotate The Cube On X, Y & Z
+
+		// Rotate The Cube On X, Y & Z		
 		gl.glRotatef(xquad, 0.0f, 1.0f, 0.0f);
 		gl.glRotatef(yquad, 1.0f, 0.0f, 0.0f);
 		gl.glRotatef(zquad, 0.0f, 0.0f, 1.0f);
@@ -43,17 +47,22 @@ public class Cube implements GLEventListener {
 		//giving different colors to different sides
 		gl.glBegin(GL2.GL_QUADS); // Start Drawing The Cube
 		
+		/*
 		gl.glColor3f(1f, 0f, 0f); // red color
 		gl.glVertex3f(1.0f, 1.0f, -1.0f); // Top Right Of The Quad (Top)
 		gl.glVertex3f(-1.0f, 1.0f, -1.0f); // Top Left Of The Quad (Top)
 		gl.glVertex3f(-1.0f, 1.0f, 1.0f); // Bottom Left Of The Quad (Top)
 		gl.glVertex3f(1.0f, 1.0f, 1.0f); // Bottom Right Of The Quad (Top)
 		
+		
 		gl.glColor3f(0f, 1f, 0f); // green color
 		gl.glVertex3f(1.0f, -1.0f, 1.0f); // Top Right Of The Quad
 		gl.glVertex3f(-1.0f, -1.0f, 1.0f); // Top Left Of The Quad
 		gl.glVertex3f(-1.0f, -1.0f, -1.0f); // Bottom Left Of The Quad
 		gl.glVertex3f(1.0f, -1.0f, -1.0f); // Bottom Right Of The Quad
+		
+		*/
+		
 		
 		gl.glColor3f(0f, 0f, 1f); // blue color
 		gl.glVertex3f(1.0f, 1.0f, 1.0f); // Top Right Of The Quad (Front)
@@ -82,6 +91,7 @@ public class Cube implements GLEventListener {
 		
 		gl.glEnd(); // Done Drawing The Quad
 		gl.glFlush();
+		
 		xquad += xrot;
 		yquad += yrot;
 		zquad += zrot;
@@ -124,9 +134,11 @@ public class Cube implements GLEventListener {
 		//GLCapabilities capabilities = new GLCapabilities(profile);
 		// The canvas
 		//final GLCanvas glcanvas = new GLCanvas(capabilities);
+		
 		Cube cube = new Cube();
 		glcanvas.addGLEventListener(cube);
-		glcanvas.setSize(400, 400);
+		glcanvas.setSize(CANVAS_WIDTH, CANVAS_HEIGHT);
+		
 		final JFrame frame = new JFrame(" Multicolored cube");
 		frame.getContentPane().add(glcanvas);
 		frame.setSize(frame.getContentPane().getPreferredSize());
@@ -149,7 +161,7 @@ public class Cube implements GLEventListener {
 					yrot = 0.0f;
 					zrot = 0.0f;
 
-					animator.start();
+					//animator.start();
 				}
 				
 				if (e.getKeyCode() == KeyEvent.VK_LEFT)
@@ -157,7 +169,7 @@ public class Cube implements GLEventListener {
 					xrot = -0.5f;
 					yrot = 0.0f;
 					zrot = 0.0f;
-					animator.start();
+					//animator.start();
 				}
 				
 				if (e.getKeyCode() == KeyEvent.VK_UP)
@@ -165,7 +177,7 @@ public class Cube implements GLEventListener {
 					yrot = 0.5f;
 				    xrot = 0.0f;
 					zrot = 0.0f;
-					animator.start();
+					//animator.start();
 				}
 				
 				if (e.getKeyCode() == KeyEvent.VK_DOWN)
@@ -173,7 +185,7 @@ public class Cube implements GLEventListener {
 					yrot = -0.5f;
 					xrot = 0.0f;
 					zrot = 0.0f;
-					animator.start();
+					//animator.start();
 				}
 				
 				if (e.getKeyCode() == KeyEvent.VK_Z)
@@ -181,7 +193,7 @@ public class Cube implements GLEventListener {
 					yrot = 0.0f;
 					xrot = 0.0f;
 					zrot = -0.5f;
-					animator.start();
+					//animator.start();
 				}
 				
 				if (e.getKeyCode() == KeyEvent.VK_X)
@@ -189,7 +201,7 @@ public class Cube implements GLEventListener {
 					yrot = 0.0f;
 					xrot = 0.0f;
 					zrot = 0.5f;
-					animator.start();
+					//animator.start();
 				}
 
 			}
@@ -199,7 +211,7 @@ public class Cube implements GLEventListener {
 				yrot = 0.0f;
 				xrot = 0.0f;
 				zrot = 0.0f;
-				animator.start();
+				//animator.start();
 			}
 
 		};
@@ -210,8 +222,78 @@ public class Cube implements GLEventListener {
 			public void mouseClicked(MouseEvent e) {
 				// TODO Auto-generated method stub
 				Point p = e.getPoint();
-
 				
+				int w = CANVAS_WIDTH;
+				int h = CANVAS_HEIGHT;
+				
+
+				//top third
+				if(p.y >= 0 && p.y < (h/3.0))
+				{
+					//left third
+					if(p.x >= 0 && p.x < (w/3.0))
+					{
+					}
+					
+					//center third
+					else if(p.x >= (w/3.0) && p.x < (2*w/3.0))
+					{
+						yquad += 45f;
+
+					}
+					
+					
+					//right third
+					else if(p.x >= (2*w/3.0) && p.x <= w)
+					{
+
+					}
+				}
+				
+				//middle third
+				else if(p.y >= (h/3.0) && p.y < (2*h/3.0))
+				{
+					//left third
+					if(p.x >= 0 && p.x < (w/3.0))
+					{
+						xquad += -45f;
+					}
+					
+					//center third
+					else if(p.x >= (w/3.0) && p.x < (2*w/3.0))
+					{
+					}
+					
+					
+					//right third
+					else if(p.x >= (2*w/3.0) && p.x <= w)
+					{
+						xquad += 45f;
+					}
+				}
+				
+				
+				//bottom third
+				else if(p.y >= (2*h/3.0) && p.y <= h)
+				{
+					//left third
+					if(p.x >= 0 && p.x < (w/3.0))
+					{
+					}
+					
+					//center third
+					else if(p.x >= (w/3.0) && p.x < (2*w/3.0))
+					{
+						yquad += -45f;
+					}
+					
+					
+					//right third
+					else if(p.x >= (2*w/3.0) && p.x <= w)
+					{
+					}				
+				}
+					
 			}
 
 			@Override
@@ -244,7 +326,12 @@ public class Cube implements GLEventListener {
 		glcanvas.addMouseListener(mouseListener);
 
 
-		//final FPSAnimator animator = new FPSAnimator(glcanvas, 300, true);
 		animator.start();
 	}
+	
+	
+	
+
+	
+	
 }
