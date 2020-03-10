@@ -47,7 +47,7 @@ public class Cube implements GLEventListener {
 		//giving different colors to different sides
 		gl.glBegin(GL2.GL_QUADS); // Start Drawing The Cube
 		
-		/*
+		
 		gl.glColor3f(1f, 0f, 0f); // red color
 		gl.glVertex3f(1.0f, 1.0f, -1.0f); // Top Right Of The Quad (Top)
 		gl.glVertex3f(-1.0f, 1.0f, -1.0f); // Top Left Of The Quad (Top)
@@ -60,9 +60,7 @@ public class Cube implements GLEventListener {
 		gl.glVertex3f(-1.0f, -1.0f, 1.0f); // Top Left Of The Quad
 		gl.glVertex3f(-1.0f, -1.0f, -1.0f); // Bottom Left Of The Quad
 		gl.glVertex3f(1.0f, -1.0f, -1.0f); // Bottom Right Of The Quad
-		
-		*/
-		
+				
 		
 		gl.glColor3f(0f, 0f, 1f); // blue color
 		gl.glVertex3f(1.0f, 1.0f, 1.0f); // Top Right Of The Quad (Front)
@@ -90,6 +88,65 @@ public class Cube implements GLEventListener {
 		
 		
 		gl.glEnd(); // Done Drawing The Quad
+		
+		gl.glBegin(GL2.GL_LINES);
+		gl.glColor3f(0f, 0f, 0f);
+		gl.glVertex3f(-0.33f, 1.0f, 1.0f); //Front face lines
+		gl.glVertex3f(-0.33f, -1.0f, 1.0f);
+		gl.glVertex3f(0.33f, 1.0f, 1.0f);
+		gl.glVertex3f(0.33f, -1.0f, 1.0f);
+		gl.glVertex3f(1.0f, 0.33f, 1.0f);
+		gl.glVertex3f(-1.0f, 0.33f, 1.0f);
+		gl.glVertex3f(1.0f, -0.33f, 1.0f);
+		gl.glVertex3f(-1.0f, -0.33f, 1.0f);
+		
+		gl.glVertex3f(0.33f, 1.0f, -1.0f); // Top face lines
+		gl.glVertex3f(0.33f, 1.0f, 1.0f);
+		gl.glVertex3f(-0.33f, 1.0f, -1.0f);
+		gl.glVertex3f(-0.33f, 1.0f, 1.0f);
+		gl.glVertex3f(1.0f, 1.0f, 0.33f);
+		gl.glVertex3f(-1.0f, 1.0f, 0.33f);
+		gl.glVertex3f(1.0f, 1.0f, -0.33f);
+		gl.glVertex3f(-1.0f, 1.0f, -0.33f);
+		
+		gl.glVertex3f(-1.0f, -0.33f, 1.0f); //Left face lines
+		gl.glVertex3f(-1.0f, -0.33f, -1.0f);
+		gl.glVertex3f(-1.0f, 0.33f, 1.0f);
+		gl.glVertex3f(-1.0f, 0.33f, -1.0f);
+		gl.glVertex3f(-1.0f, 1.0f, 0.33f);
+		gl.glVertex3f(-1.0f, -1.0f, 0.33f);
+		gl.glVertex3f(-1.0f, -1.0f, -0.33f);
+		gl.glVertex3f(-1.0f, 1.0f, -0.33f);
+		
+		gl.glVertex3f(1.0f, 0.33f, -1.0f); //Right face lines
+		gl.glVertex3f(1.0f, 0.33f, 1.0f);
+		gl.glVertex3f(1.0f, -0.33f, -1.0f);
+		gl.glVertex3f(1.0f, -0.33f, 1.0f);
+		gl.glVertex3f(1.0f, 1.0f, 0.33f);
+		gl.glVertex3f(1.0f, -1.0f, 0.33f);
+		gl.glVertex3f(1.0f, 1.0f, -0.33f);
+		gl.glVertex3f(1.0f, -1.0f, -0.33f);
+		
+		gl.glVertex3f(0.33f, -1.0f, -1.0f); //Back face lines
+		gl.glVertex3f(0.33f, 1.0f, -1.0f);
+		gl.glVertex3f(-0.33f, -1.0f, -1.0f);
+		gl.glVertex3f(-0.33f, 1.0f, -1.0f);
+		gl.glVertex3f(1.0f, 0.33f, -1.0f);
+		gl.glVertex3f(-1.0f, 0.33f, -1.0f);
+		gl.glVertex3f(1.0f, -0.33f, -1.0f);
+		gl.glVertex3f(-1.0f, -0.33f, -1.0f);
+		
+		gl.glVertex3f(0.33f, -1.0f, 1.0f); //Bottom face lines
+		gl.glVertex3f(0.33f, -1.0f, -1.0f);
+		gl.glVertex3f(-0.33f, -1.0f, 1.0f);
+		gl.glVertex3f(-0.33f, -1.0f, -1.0f);
+		gl.glVertex3f(1.0f, -1.0f, 0.33f);
+		gl.glVertex3f(-1.0f, -1.0f, 0.33f);
+		gl.glVertex3f(1.0f, -1.0f, -0.33f);
+		gl.glVertex3f(-1.0f, -1.0f, -0.33f);
+		
+		gl.glEnd();
+		
 		gl.glFlush();
 		
 		xquad += xrot;
@@ -154,7 +211,6 @@ public class Cube implements GLEventListener {
 
 			@Override
 			public void keyPressed(KeyEvent e) {
-				System.out.println(KeyEvent.getKeyText(e.getKeyCode()));
 				if (e.getKeyCode() == KeyEvent.VK_RIGHT)
 				{
 					xrot = 0.5f;
