@@ -69,7 +69,31 @@ public class Cube implements GLEventListener {
 		gl.glVertex3f(1.0f, -1.0f, 1.0f); // Bottom Left Of The Quad
 		gl.glVertex3f(1.0f, -1.0f, -1.0f); // Bottom Right Of The Quad
 		gl.glEnd(); // Done Drawing The Quad
+		
+		gl.glBegin(GL2.GL_LINES);
+		gl.glColor3f(0f, 0f, 0f);
+		gl.glVertex3f(-0.33f, 1.0f, 1.0f); //Front face lines
+		gl.glVertex3f(-0.33f, -1.0f, 1.0f);
+		gl.glVertex3f(0.33f, 1.0f, 1.0f);
+		gl.glVertex3f(0.33f, -1.0f, 1.0f);
+		gl.glVertex3f(1.0f, 0.33f, 1.0f);
+		gl.glVertex3f(-1.0f, 0.33f, 1.0f);
+		gl.glVertex3f(1.0f, -0.33f, 1.0f);
+		gl.glVertex3f(-1.0f, -0.33f, 1.0f);
+		
+		gl.glVertex3f(0.33f, 1.0f, -1.0f); // Top face lines
+		gl.glVertex3f(0.33f, 1.0f, 1.0f);
+		gl.glVertex3f(-0.33f, 1.0f, -1.0f);
+		gl.glVertex3f(-0.33f, 1.0f, 1.0f);
+		gl.glVertex3f(1.0f, 1.0f, 0.33f);
+		gl.glVertex3f(-1.0f, 1.0f, 0.33f);
+		gl.glVertex3f(1.0f, 1.0f, -0.33f);
+		gl.glVertex3f(-1.0f, 1.0f, -0.33f);
+		gl.glEnd();
+		
 		gl.glFlush();
+		
+		
 		xquad += xrot;
 		yquad += yrot;
 	}
@@ -128,7 +152,6 @@ public class Cube implements GLEventListener {
 
 			@Override
 			public void keyPressed(KeyEvent e) {
-				System.out.println(KeyEvent.getKeyText(e.getKeyCode()));
 				if (e.getKeyCode() == KeyEvent.VK_RIGHT)
 				{
 					xrot = 0.5f;
