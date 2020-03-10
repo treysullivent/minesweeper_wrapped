@@ -34,9 +34,9 @@ public class Board extends JPanel {
 	private final int DRAW_FLAG = 11;
 	private final int DRAW_WRONG_FLAG = 12;
 
-	private final int N_MINES = 28;
-	private final int N_ROWS = 10;
-	private final int N_COLS = 10;
+	private final int N_MINES = 40;
+	private final int N_ROWS = 16;
+	private final int N_COLS = 16;
 	private final int N_CELLS = N_ROWS * N_COLS;
 
 	
