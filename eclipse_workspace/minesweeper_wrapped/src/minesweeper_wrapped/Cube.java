@@ -25,12 +25,14 @@ public class Cube implements GLEventListener {
 
 
 	final static GLProfile profile = GLProfile.get(GLProfile.GL2);
-	final private static int CANVAS_HEIGHT = 400;
-	final private static int CANVAS_WIDTH = 400;
+	final private static int CANVAS_HEIGHT = 800;
+	final private static int CANVAS_WIDTH = 800;
 	
 	static GLCapabilities capabilities = new GLCapabilities(profile);
 	final static GLCanvas glcanvas = new GLCanvas(capabilities);
 	final static FPSAnimator animator = new FPSAnimator(glcanvas, 300, true);
+	
+	MineObject firstMine = new MineObject(3f, 4f, 5f, false);
 
 	@Override
 	public void display(GLAutoDrawable drawable) {
@@ -44,53 +46,55 @@ public class Cube implements GLEventListener {
 		gl.glRotatef(yquad, 1.0f, 0.0f, 0.0f);
 		gl.glRotatef(zquad, 0.0f, 0.0f, 1.0f);
 		
-		//giving different colors to different sides
-		gl.glBegin(GL2.GL_QUADS); // Start Drawing The Cube
+		// bottom of cube
+		drawCube(gl, -0.67f, -0.67f, 0.67f);
+		drawCube(gl, 0f, -0.67f, 0.67f);
+		drawCube(gl, 0.67f, -0.67f, 0.67f);
+		
+		drawCube(gl, -0.67f, -0.67f, 0f);
+		drawCube(gl, 0f, -0.67f, 0f);
+		drawCube(gl, 0.67f, -0.67f, 0f);
+		
+		drawCube(gl, -0.67f, -0.67f, -0.67f);
+		drawCube(gl, 0f, -0.67f, -0.67f);
+		drawCube(gl, 0.67f, -0.67f, -0.67f);
+		
+		// end of bottom
 		
 		
-		gl.glColor3f(1f, 0f, 0f); // red color
-		gl.glVertex3f(1.0f, 1.0f, -1.0f); // Top Right Of The Quad (Top)
-		gl.glVertex3f(-1.0f, 1.0f, -1.0f); // Top Left Of The Quad (Top)
-		gl.glVertex3f(-1.0f, 1.0f, 1.0f); // Bottom Left Of The Quad (Top)
-		gl.glVertex3f(1.0f, 1.0f, 1.0f); // Bottom Right Of The Quad (Top)
+		// Middle 
+		drawCube(gl, -0.67f, 0f, 0.67f);
+		drawCube(gl, 0f, 0f, 0.67f);
+		drawCube(gl, 0.67f, 0f, 0.67f);
 		
+		drawCube(gl, -0.67f, 0f, 0f);
+		drawCube(gl, 0f, 0f, 0f);
+		drawCube(gl, 0.67f, 0f, 0f);
 		
-		gl.glColor3f(0f, 1f, 0f); // green color
-		gl.glVertex3f(1.0f, -1.0f, 1.0f); // Top Right Of The Quad
-		gl.glVertex3f(-1.0f, -1.0f, 1.0f); // Top Left Of The Quad
-		gl.glVertex3f(-1.0f, -1.0f, -1.0f); // Bottom Left Of The Quad
-		gl.glVertex3f(1.0f, -1.0f, -1.0f); // Bottom Right Of The Quad
-				
+		drawCube(gl, -0.67f, 0f, -0.67f);
+		drawCube(gl, 0f, 0f, -0.67f);
+		drawCube(gl, 0.67f, 0f, -0.67f);
 		
-		gl.glColor3f(0f, 0f, 1f); // blue color
-		gl.glVertex3f(1.0f, 1.0f, 1.0f); // Top Right Of The Quad (Front)
-		gl.glVertex3f(-1.0f, 1.0f, 1.0f); // Top Left Of The Quad (Front)
-		gl.glVertex3f(-1.0f, -1.0f, 1.0f); // Bottom Left Of The Quad
-		gl.glVertex3f(1.0f, -1.0f, 1.0f); // Bottom Right Of The Quad
+		// end Middle
 		
-		gl.glColor3f(1f, 1f, 0f); // yellow (red + green)
-		gl.glVertex3f(1.0f, -1.0f, -1.0f); // Bottom Left Of The Quad
-		gl.glVertex3f(-1.0f, -1.0f, -1.0f); // Bottom Right Of The Quad
-		gl.glVertex3f(-1.0f, 1.0f, -1.0f); // Top Right Of The Quad (Back)
-		gl.glVertex3f(1.0f, 1.0f, -1.0f); // Top Left Of The Quad (Back)
+		// Top
+		drawCube(gl, -0.67f, 0.67f, 0.67f);
+		drawCube(gl, 0f, 0.67f, 0.67f);
+		drawCube(gl, 0.67f, 0.67f, 0.67f);
 		
-		gl.glColor3f(1f, 0f, 1f); // purple (red + green)
-		gl.glVertex3f(-1.0f, 1.0f, 1.0f); // Top Right Of The Quad (Left)
-		gl.glVertex3f(-1.0f, 1.0f, -1.0f); // Top Left Of The Quad (Left)
-		gl.glVertex3f(-1.0f, -1.0f, -1.0f); // Bottom Left Of The Quad
-		gl.glVertex3f(-1.0f, -1.0f, 1.0f); // Bottom Right Of The Quad
+		drawCube(gl, -0.67f, 0.67f, 0f);
+		drawCube(gl, 0f, 0.67f, 0f);
+		drawCube(gl, 0.67f, 0.67f, 0f);
 		
-		gl.glColor3f(0f, 1f, 1f); // sky blue (blue +green)
-		gl.glVertex3f(1.0f, 1.0f, -1.0f); // Top Right Of The Quad (Right)
-		gl.glVertex3f(1.0f, 1.0f, 1.0f); // Top Left Of The Quad
-		gl.glVertex3f(1.0f, -1.0f, 1.0f); // Bottom Left Of The Quad
-		gl.glVertex3f(1.0f, -1.0f, -1.0f); // Bottom Right Of The Quad
+		drawCube(gl, -0.67f, 0.67f, -0.67f);
+		drawCube(gl, 0f, 0.67f, -0.67f);
+		drawCube(gl, 0.67f, 0.67f, -0.67f);
 		
+		// End top
 		
-		gl.glEnd(); // Done Drawing The Quad
 		
 		gl.glBegin(GL2.GL_LINES);
-		gl.glColor3f(0f, 0f, 0f);
+		gl.glColor3f(255f, 255f, 255f);
 		gl.glVertex3f(-0.33f, 1.0f, 1.0f); //Front face lines
 		gl.glVertex3f(-0.33f, -1.0f, 1.0f);
 		gl.glVertex3f(0.33f, 1.0f, 1.0f);
@@ -155,6 +159,8 @@ public class Cube implements GLEventListener {
 
 	}
 
+	
+
 	@Override
 	public void dispose(GLAutoDrawable drawable) {
 		// TODO Auto-generated method stub
@@ -184,6 +190,65 @@ public class Cube implements GLEventListener {
 		glu.gluPerspective(45.0f, h, 1.0, 20.0);
 		gl.glMatrixMode(GL2.GL_MODELVIEW);
 		gl.glLoadIdentity();
+	}
+	
+	public void drawCube(GL2 gl, float xOff, float yOff, float zOff) {
+		//giving different colors to different sides
+				gl.glBegin(GL2.GL_QUADS); // Start Drawing The Cube
+				
+				/*
+				gl.glColor3f(1f, 0f, 0f); // red color top
+				gl.glVertex3f(-0.33f, -0.33f, 0.33f); // Top Right Of The Quad (Top)
+				gl.glVertex3f(-1f, -0.33f, 0.33f); // Top Left Of The Quad (Top)
+				gl.glVertex3f(-1f, -0.33f, 1f); // Bottom Left Of The Quad (Top)
+				gl.glVertex3f(-0.33f, -0.33f, 1f); // Bottom Right Of The Quad (Top)
+				
+				gl.glColor3f(0f,1f, 0f); // green color bottom 
+				gl.glVertex3f(-0.33f, -1f, 0.33f); // Top Right Of The Quad 
+				gl.glVertex3f(-1f, -1f, 0.33f); // Top Left Of The Quad 
+				gl.glVertex3f(-1f, -1f, 1f); // Bottom Left Of The Quad 
+				gl.glVertex3f(-0.33f, -1f, 1f); // Bottom Right Of The Quad 
+				*/
+				
+				gl.glColor3f(0.8f, 0.8f, 0f); // red color top
+				gl.glVertex3f(0.33f + xOff, 0.33f + yOff, -0.33f + zOff); // Top Right Of The Quad (Top)
+				gl.glVertex3f(-0.33f + xOff, 0.33f + yOff, -0.33f + zOff); // Top Left Of The Quad (Top)
+				gl.glVertex3f(-0.33f + xOff, 0.33f + yOff, 0.33f + zOff); // Bottom Left Of The Quad (Top)
+				gl.glVertex3f(0.33f + xOff, 0.33f + yOff, 0.33f + zOff); // Bottom Right Of The Quad (Top)
+				
+				// bottom 
+				gl.glVertex3f(0.33f + xOff, -0.33f + yOff, 0.33f + zOff); // Top Right Of The Quad 
+				gl.glVertex3f(-0.33f + xOff, -0.33f + yOff, 0.33f + zOff); // Top Left Of The Quad 
+				gl.glVertex3f(-0.33f + xOff, -0.33f + yOff, -0.33f + zOff); // Bottom Left Of The Quad 
+				gl.glVertex3f(0.33f + xOff, -0.33f + yOff, -0.33f + zOff); // Bottom Right Of The Quad
+				
+				// front 
+				gl.glVertex3f(0.33f + xOff, 0.33f + yOff, 0.33f + zOff); 
+				gl.glVertex3f(-0.33f + xOff, 0.33f + yOff, 0.33f + zOff);  
+				gl.glVertex3f(-0.33f + xOff, -0.33f + yOff, 0.33f + zOff);  //bottom left
+				gl.glVertex3f(0.33f + xOff, -0.33f + yOff, 0.33f + zOff); 
+				
+				 //  back 
+				gl.glVertex3f(0.33f + xOff, -0.33f + yOff, -0.33f + zOff);  
+				gl.glVertex3f(-0.33f + xOff, -0.33f + yOff, -0.33f + zOff);  
+				gl.glVertex3f(-0.33f + xOff, 0.33f + yOff, -0.33f + zOff); 
+				gl.glVertex3f(0.33f + xOff, 0.33f + yOff, -0.33f + zOff); 
+				
+				//left
+				gl.glVertex3f(-0.33f + xOff, 0.33f + yOff, 0.33f + zOff);  
+				gl.glVertex3f(-0.33f + xOff, 0.33f + yOff, -0.33f + zOff);  
+				gl.glVertex3f(-0.33f + xOff, -0.33f + yOff, -0.33f + zOff); 
+				gl.glVertex3f(-0.33f + xOff, -0.33f + yOff, 0.33f + zOff); 
+				
+				//  right
+				gl.glVertex3f(0.33f + xOff, 0.33f + yOff, -0.33f + zOff);  
+				gl.glVertex3f(0.33f + xOff, 0.33f + yOff, 0.33f + zOff);  
+				gl.glVertex3f(0.33f + xOff, -0.33f + yOff, 0.33f + zOff); 
+				gl.glVertex3f(0.33f + xOff, -0.33f + yOff, -0.33f + zOff); 
+				
+				
+				
+				gl.glEnd(); // Done Drawing The Quad
 	}
 
 	public static void main(String[] args) {
@@ -385,9 +450,48 @@ public class Cube implements GLEventListener {
 		animator.start();
 	}
 	
+	/*
+	 * 
+	 * gives us the tiny cube
+	 * could be useful for translating all the locations 
 	
+	gl.glColor3f(1f, 0f, 0f); // red color top
+	gl.glVertex3f(0.33f, 0.33f, -0.33f); // Top Right Of The Quad (Top)
+	gl.glVertex3f(-0.33f, 0.33f, -0.33f); // Top Left Of The Quad (Top)
+	gl.glVertex3f(-0.33f, 0.33f, 0.33f); // Bottom Left Of The Quad (Top)
+	gl.glVertex3f(0.33f, 0.33f, 0.33f); // Bottom Right Of The Quad (Top)
 	
-
+	gl.glColor3f(0f,1f, 0f); // green color bottom 
+	gl.glVertex3f(0.33f, -0.33f, 0.33f); // Top Right Of The Quad 
+	gl.glVertex3f(-0.33f, -0.33f, 0.33f); // Top Left Of The Quad 
+	gl.glVertex3f(-0.33f, -0.33f, -0.33f); // Bottom Left Of The Quad 
+	gl.glVertex3f(0.33f, -0.33f, -0.33f); // Bottom Right Of The Quad
+	
+	gl.glColor3f(0f,0f, 1f); // blue color front 
+	gl.glVertex3f(0.33f, 0.33f, 0.33f); 
+	gl.glVertex3f(-0.33f, 0.33f, 0.33f);  
+	gl.glVertex3f(-0.33f, -0.33f, 0.33f);  //bottom left
+	gl.glVertex3f(0.33f, -0.33f, 0.33f); 
+	
+	gl.glColor3f(1f,1f, 0f); // yellow back 
+	gl.glVertex3f(0.33f, -0.33f, -0.33f);  
+	gl.glVertex3f(-0.33f, -0.33f, -0.33f);  
+	gl.glVertex3f(-0.33f, 0.33f, -0.33f); 
+	gl.glVertex3f(0.33f, 0.33f, -0.33f); 
+	
+	gl.glColor3f(1f,0f, 1f); // purple left
+	gl.glVertex3f(-0.33f, 0.33f, 0.33f);  
+	gl.glVertex3f(-0.33f, 0.33f, -0.33f);  
+	gl.glVertex3f(-0.33f, -0.33f, -0.33f); 
+	gl.glVertex3f(-0.33f, -0.33f, 0.33f); 
+	
+	gl.glColor3f(0f,1f, 1f); // blue right
+	gl.glVertex3f(0.33f, 0.33f, -0.33f);  
+	gl.glVertex3f(0.33f, 0.33f, 0.33f);  
+	gl.glVertex3f(0.33f, -0.33f, 0.33f); 
+	gl.glVertex3f(0.33f, -0.33f, -0.33f); 
+	
+	*/
 	
 	
 }
