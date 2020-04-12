@@ -3,6 +3,7 @@ package minesweeper_wrapped;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.*;
+import java.math.*;
 
 public class MineFieldObject {
 
@@ -66,6 +67,10 @@ public class MineFieldObject {
 		return minefield;
 	}
 	
+	//changes which block is currently selected
+	// will check if the adjacent block is accessible. If not, will try and move to the next block in the path
+	// sometimes blocks become inaccessible because of their location. Has not been fixed yet!!!
+	// not the most elegant solution but works for a demo
 	public static void changeSelectedIndex(char axis, boolean add) {
 		switch(axis) 
 		{
@@ -73,13 +78,36 @@ public class MineFieldObject {
 			if(add) 
 			{
 				if(yIndexSelected == 0.67f) break;
-				yIndexSelected += 0.67f;
 				
-				//checkMembership(xIndexSelected, yIndexSelected, zIndexSelected);
+				if(checkMembership(xIndexSelected, yIndexSelected + 0.67f, zIndexSelected) == false) 
+				{
+					if(checkMembership(xIndexSelected , yIndexSelected + 1.34f, zIndexSelected) == true)
+					{
+						yIndexSelected += 1.34f;
+						break;
+					}
+					
+					changeSelectedMine(0);
+					break;
+				}
+				
+				yIndexSelected += 0.67f;
 				break;
 			}
 			
 			if(yIndexSelected == -0.67f) break;
+			
+			if(checkMembership(xIndexSelected, yIndexSelected - 0.67f, zIndexSelected) == false)
+			{
+				if(checkMembership(xIndexSelected , yIndexSelected - 1.34f, zIndexSelected) == true)
+				{
+					yIndexSelected -= 1.34f;
+					break;
+				}
+				changeSelectedMine(0);
+				break;
+			}
+			
 			yIndexSelected -= 0.67f;
 			break;
 			
@@ -87,13 +115,35 @@ public class MineFieldObject {
 			if(add) 
 			{
 				if(xIndexSelected == 0.67f) break;
-				xIndexSelected += 0.67f;
 				
-				//checkMembership(xIndexSelected, yIndexSelected, zIndexSelected);
+				if(checkMembership(xIndexSelected + 0.67f, yIndexSelected, zIndexSelected) == false) 
+				{
+					if(checkMembership(xIndexSelected  + 1.34f, yIndexSelected, zIndexSelected) == true)
+					{
+						xIndexSelected += 1.34f;
+						break;
+					}
+					changeSelectedMine(0);
+					break;
+				}
+				
+				xIndexSelected += 0.67f;
 				break;
 			}
 			
 			if(xIndexSelected == -0.67f) break;
+			
+			if(checkMembership(xIndexSelected - 0.67f, yIndexSelected, zIndexSelected) == false) 
+			{
+				if(checkMembership(xIndexSelected  - 1.34f, yIndexSelected, zIndexSelected) == true)
+				{
+					xIndexSelected -= 1.34f;
+					break;
+				}
+				changeSelectedMine(0);
+				break;
+			}
+			
 			xIndexSelected -= 0.67f;
 			break;
 			
@@ -101,31 +151,49 @@ public class MineFieldObject {
 			if(add) 
 			{
 				if(zIndexSelected == 0.67f) break;
+				
+				if(checkMembership(xIndexSelected , yIndexSelected, zIndexSelected + 0.67f) == false) 
+				{
+					if(checkMembership(xIndexSelected , yIndexSelected, zIndexSelected + 1.34f) == true)
+					{
+						zIndexSelected += 1.34f;
+						break;
+					}
+					changeSelectedMine(0);
+					break;
+				}
+				
 				zIndexSelected += 0.67f;
 				
-				//checkMembership(xIndexSelected, yIndexSelected, zIndexSelected);
 				break;
 			}
 			
 			if(zIndexSelected == -0.67f) break;
+			
+			if(checkMembership(xIndexSelected , yIndexSelected, zIndexSelected - 0.67f) == false)
+			{
+				if(checkMembership(xIndexSelected , yIndexSelected, zIndexSelected - 1.34f) == true)
+				{
+					zIndexSelected -= 1.34f;
+					break;
+				}
+				changeSelectedMine(0);
+				break;
+			}
+			
 			zIndexSelected -= 0.67f;
 			break;
 			
 		}
 		
-		changeSelectedMine(xIndexSelected, yIndexSelected, zIndexSelected);
+		changeSelectedMine(0);
 		
 	}
 	
-	//private methods for data manipulation
-	
-	private static void checkMembership(float x, float y, float z) {
-		
-	}
-	
-	private static void changeSelectedMine(float x, float y, float z) 
+	// change a block to having been mined
+	// will stop it from being drawn
+	public static void changeMinedStatus() 
 	{
-		clearAllSelected();
 		
 		int length = minefield.size();
 		
@@ -137,13 +205,85 @@ public class MineFieldObject {
 				{
 					if(minefield.get(i).getZOffset() == zIndexSelected) 
 					{
-						minefield.get(i).toggleSelected();
+						minefield.get(i).toggleMined();
+						changeSelectedMine(i);
+						return;
 					}
 				}
 			}
 		}
 	}
 	
+	//private methods for data manipulation
+	
+	// check if the block at location x, y, z has been mined or not
+	private static boolean checkMembership(float x, float y, float z) {
+	int length = minefield.size();
+		
+		for(int i = 0; i < length; i++) 
+		{
+			if(minefield.get(i).getXOffset() == x) 
+			{
+				if(minefield.get(i).getYOffset() == y) 
+				{
+					if(minefield.get(i).getZOffset() == z) 
+					{
+						if(minefield.get(i).getHasBeenMined())
+						return false;
+					}
+				}
+			}
+		}
+		// will return false if out of bounds;
+		if(Math.abs(x) > 0.67f || Math.abs(y) > 0.67f || Math.abs(z) > 0.67f) return false;
+		
+		// if the mind exists in the field;
+		return true;
+	}
+	
+	// changes the selected mine to the index selected 
+	private static void changeSelectedMine(int index) 
+	{
+		clearAllSelected();
+		int length = minefield.size();
+		
+		// if the current index is already mined, find a new block to select
+		if(checkMembership(xIndexSelected, yIndexSelected, zIndexSelected) == false) 
+		{
+			//if(index == length - 1) index = 0;
+			for(int i = 0 ; i < length; i++)
+			{
+				if(minefield.get(i).getHasBeenMined() == false)
+				{
+					minefield.get(i).toggleSelected();
+					xIndexSelected = minefield.get(i).getXOffset();
+					yIndexSelected = minefield.get(i).getYOffset();
+					zIndexSelected = minefield.get(i).getZOffset();
+					return;
+				}
+			}
+			
+		}
+		
+		
+		for(int i = 0; i < length; i++) 
+		{
+			if(minefield.get(i).getXOffset() == xIndexSelected) 
+			{
+				if(minefield.get(i).getYOffset() == yIndexSelected) 
+				{
+					if(minefield.get(i).getZOffset() == zIndexSelected) 
+					{
+						minefield.get(i).toggleSelected();
+						return;
+					}
+				}
+			}
+		}
+	}
+	
+	
+	// clears selected status from all mines
 	private static void clearAllSelected()
 	{
 		int length = minefield.size();

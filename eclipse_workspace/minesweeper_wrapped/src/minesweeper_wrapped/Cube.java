@@ -33,6 +33,8 @@ public class Cube implements GLEventListener {
 	final static GLCanvas glcanvas = new GLCanvas(capabilities);
 	final static FPSAnimator animator = new FPSAnimator(glcanvas, 300, true);
 	
+	// this is the main minefield that gets manipulated
+	// I think it is easier to abstract the data this way but feel free to move things around as you see fit
 	private static MineFieldObject mainCube = new MineFieldObject();
 	
 
@@ -48,9 +50,10 @@ public class Cube implements GLEventListener {
 		gl.glRotatef(yquad, 1.0f, 0.0f, 0.0f);
 		gl.glRotatef(zquad, 0.0f, 0.0f, 1.0f);
 		
-		mainCube.getMineField().forEach((n) -> drawCube(gl, n.getXOffset(), n.getYOffset(), n.getZOffset(), n.getSelected()) ); 
+		// draw the cubes in the field
+		mainCube.getMineField().forEach((n) -> drawCube(gl, n.getXOffset(), n.getYOffset(), n.getZOffset(), n.getSelected(), n.getHasBeenMined()) ); 
 		
-		
+		// still drawing the lines ebcause it looks good
 		drawLines(gl);
 		
 		gl.glFlush();
@@ -97,10 +100,6 @@ public class Cube implements GLEventListener {
 	
 
 	public static void main(String[] args) {
-		//final GLProfile profile = GLProfile.get(GLProfile.GL2);
-		//GLCapabilities capabilities = new GLCapabilities(profile);
-		// The canvas
-		//final GLCanvas glcanvas = new GLCanvas(capabilities);
 		
 		Cube cube = new Cube();
 		glcanvas.addGLEventListener(cube);
@@ -115,7 +114,7 @@ public class Cube implements GLEventListener {
 
 			@Override
 			public void keyTyped(KeyEvent e) {
-				// TODO Auto-generated method stub
+				
 
 			}
 
@@ -127,7 +126,6 @@ public class Cube implements GLEventListener {
 					yrot = 0.0f;
 					zrot = 0.0f;
 
-					//animator.start();
 				}
 				
 				if (e.getKeyCode() == KeyEvent.VK_LEFT)
@@ -135,7 +133,7 @@ public class Cube implements GLEventListener {
 					xrot = -1f;
 					yrot = 0.0f;
 					zrot = 0.0f;
-					//animator.start();
+					
 				}
 				
 				if (e.getKeyCode() == KeyEvent.VK_UP)
@@ -143,7 +141,7 @@ public class Cube implements GLEventListener {
 					yrot = 1f;
 				    xrot = 0.0f;
 					zrot = 0.0f;
-					//animator.start();
+					
 				}
 				
 				if (e.getKeyCode() == KeyEvent.VK_DOWN)
@@ -151,7 +149,7 @@ public class Cube implements GLEventListener {
 					yrot = -1f;
 					xrot = 0.0f;
 					zrot = 0.0f;
-					//animator.start();
+					
 				}
 				
 				if (e.getKeyCode() == KeyEvent.VK_Z)
@@ -159,7 +157,7 @@ public class Cube implements GLEventListener {
 					yrot = 0.0f;
 					xrot = 0.0f;
 					zrot = -1f;
-					//animator.start();
+				
 				}
 				
 				if (e.getKeyCode() == KeyEvent.VK_X)
@@ -167,7 +165,7 @@ public class Cube implements GLEventListener {
 					yrot = 0.0f;
 					xrot = 0.0f;
 					zrot = 1f;
-					//animator.start();
+					
 				}
 				
 				// y translation
@@ -204,6 +202,13 @@ public class Cube implements GLEventListener {
 				if (e.getKeyCode() == KeyEvent.VK_E)
 				{
 					MineFieldObject.changeSelectedIndex('z', true);	
+				}
+				
+				// this will make a block "mined" and stop it from being drawn on the cube
+				if (e.getKeyCode() == KeyEvent.VK_ENTER)
+					
+				{
+					MineFieldObject.changeMinedStatus();	
 				}
 
 			}
@@ -392,13 +397,16 @@ public class Cube implements GLEventListener {
 		gl.glEnd();
 	}
 	
-	public void drawCube(GL2 gl, float xOff, float yOff, float zOff, boolean selected) {
-		//giving different colors to different sides
+	public void drawCube(GL2 gl, float xOff, float yOff, float zOff, boolean selected, boolean mined) {
+		
+			// doesn't draw the cube if it's been mined
+				if(mined) return;
+				
 				gl.glBegin(GL2.GL_QUADS); // Start Drawing The Cube
 				
-				if(selected) gl.glColor3f(1.0f, 0.6f, 0f);
+				if(selected) gl.glColor3f(1.0f, 0.6f, 0f); // make orange if selected
 				
-				else gl.glColor3f(0.8f, 0.8f, 0f); // red color top
+				else gl.glColor3f(0.8f, 0.8f, 0f); // yellow color for unselected mine
 				
 				
 				gl.glVertex3f(0.33f + xOff, 0.33f + yOff, -0.33f + zOff); // Top Right Of The Quad (Top)
@@ -415,7 +423,7 @@ public class Cube implements GLEventListener {
 				// front 
 				gl.glVertex3f(0.33f + xOff, 0.33f + yOff, 0.33f + zOff); 
 				gl.glVertex3f(-0.33f + xOff, 0.33f + yOff, 0.33f + zOff);  
-				gl.glVertex3f(-0.33f + xOff, -0.33f + yOff, 0.33f + zOff);  //bottom left
+				gl.glVertex3f(-0.33f + xOff, -0.33f + yOff, 0.33f + zOff); 
 				gl.glVertex3f(0.33f + xOff, -0.33f + yOff, 0.33f + zOff); 
 				
 				 //  back 
