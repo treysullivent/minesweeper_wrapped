@@ -16,4 +16,29 @@ public class MineObject {
 		
 		selected = isChosen;
 	}
+	
+	// getters
+	
+	public float getXOffset() {
+		return xOff;
+	}
+	
+	public float getYOffset() {
+		return yOff;
+	}
+	
+	public float getZOffset() {
+		return zOff;
+	}
+	
+	public boolean getSelected() {
+		return selected;
+	}
+	
+	// setters
+	
+	public void toggleSelected() 
+	{
+		selected = !selected;
+	}
 }
