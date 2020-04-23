@@ -52,7 +52,7 @@ public class Cube implements GLEventListener {
 		gl.glRotatef(zquad, 0.0f, 0.0f, 1.0f);
 
 		// draw the cubes in the field
-		mainCube.getMineField().forEach((n) -> drawCube(gl, n.getXOffset(), n.getYOffset(), n.getZOffset(), n.getSelected(), n.getHasBeenMined()) ); 
+		mainCube.getMineField().forEach((n) -> drawCube(gl, n.getXOffset(), n.getYOffset(), n.getZOffset(), n.getSelected(), n.getHasBeenMined(), n.getHasBeenFlagged()) ); 
 
 		// still drawing the lines ebcause it looks good
 		drawLines(gl);
@@ -210,6 +210,11 @@ public class Cube implements GLEventListener {
 
 				{
 					MineFieldObject.changeMinedStatus();	
+				}
+				
+				if (e.getKeyCode() == KeyEvent.VK_F)
+				{
+					MineFieldObject.changeFlaggedStatus();
 				}
 
 			}
@@ -398,7 +403,7 @@ public class Cube implements GLEventListener {
 		gl.glEnd();
 	}
 
-	public void drawCube(GL2 gl, float xOff, float yOff, float zOff, boolean selected, boolean mined) {
+	public void drawCube(GL2 gl, float xOff, float yOff, float zOff, boolean selected, boolean mined, boolean flagged) {
 
 		// doesn't draw the cube if it's been mined
 		gl.glBegin(GL2.GL_QUADS); // Start Drawing The Cube
@@ -451,6 +456,12 @@ public class Cube implements GLEventListener {
 		{
 			//drawNumber(gl, xOff, yOff, zOff);
 			drawZero(gl, xOff, yOff, zOff);
+			return;
+		}
+		
+		if(flagged)
+		{
+			drawFlag(gl, xOff, yOff, zOff);
 			return;
 		}
 
@@ -694,6 +705,78 @@ public class Cube implements GLEventListener {
 		gl.glVertex3f(0.33f + xOff, yOff, -0.2f + zOff);
 		gl.glVertex3f(0.33f + xOff, -0.2f + yOff, -0.2f + zOff);
 		gl.glVertex3f(0.33f + xOff, -0.2f + yOff, 0.2f + zOff);
+		gl.glEnd();
+	}
+	
+	public void drawFlag(GL2 gl, float xOff, float yOff, float zOff)
+	{
+		gl.glColor3f(1, 1, 1);
+		gl.glBegin(GL.GL_LINE_STRIP); //front
+		gl.glVertex3f(xOff, 0.2f + yOff, .33f + zOff);
+		gl.glVertex3f(xOff, -0.2f + yOff, .33f + zOff);
+		gl.glEnd();
+		
+		gl.glBegin(GL.GL_LINE_STRIP); //bottom
+		gl.glVertex3f(xOff, -0.33f + yOff, 0.2f + zOff);
+		gl.glVertex3f(xOff, -0.33f + yOff, -0.2f + zOff);
+		gl.glEnd();
+		
+		gl.glBegin(GL.GL_LINE_STRIP); //top
+		gl.glVertex3f(xOff, 0.33f + yOff, 0.2f + zOff);
+		gl.glVertex3f(xOff, 0.33f + yOff, -0.2f + zOff);
+		gl.glEnd();
+		
+		gl.glBegin(GL.GL_LINE_STRIP); //back
+		gl.glVertex3f(xOff, 0.2f + yOff, -.33f + zOff);
+		gl.glVertex3f(xOff, -0.2f + yOff, -.33f + zOff);
+		gl.glEnd();
+		
+		gl.glBegin(GL.GL_LINE_STRIP); //left
+		gl.glVertex3f(-0.33f + xOff, 0.2f + yOff, zOff);
+		gl.glVertex3f(-0.33f + xOff, -0.2f + yOff, zOff);
+		gl.glEnd();
+		
+		gl.glBegin(GL.GL_LINE_STRIP); //right
+		gl.glVertex3f(0.33f + xOff, 0.2f + yOff, zOff);
+		gl.glVertex3f(0.33f + xOff, -0.2f + yOff, zOff);
+		gl.glEnd();
+		
+		
+		gl.glColor3f(1, 0, 0); //red
+		gl.glBegin(GL2.GL_POLYGON); //front
+		gl.glVertex3f(xOff, 0.2f + yOff, .33f + zOff);
+		gl.glVertex3f(-0.2f + xOff, 0.15f + yOff, .33f + zOff);
+		gl.glVertex3f(xOff, 0.1f + yOff, .33f + zOff);
+		gl.glEnd();
+		
+		gl.glBegin(GL2.GL_POLYGON); //bottom
+		gl.glVertex3f(xOff, -0.33f + yOff, 0.2f + zOff);
+		gl.glVertex3f(-0.2f + xOff, -0.33f + yOff, 0.15f + zOff);
+		gl.glVertex3f(xOff, -0.33f + yOff, 0.1f + zOff);
+		gl.glEnd();
+		
+		gl.glBegin(GL2.GL_POLYGON); //top
+		gl.glVertex3f(xOff, 0.33f + yOff, -0.2f + zOff);
+		gl.glVertex3f(-0.2f + xOff, 0.33f + yOff, -0.15f + zOff);
+		gl.glVertex3f(xOff, 0.33f + yOff, -0.1f + zOff);
+		gl.glEnd();
+		
+		gl.glBegin(GL2.GL_POLYGON); //back
+		gl.glVertex3f(xOff, 0.2f + yOff, -.33f + zOff);
+		gl.glVertex3f(-0.1f + xOff, 0.15f + yOff, -.33f + zOff);
+		gl.glVertex3f(xOff, 0.1f + yOff, -.33f + zOff);
+		gl.glEnd();
+		
+		gl.glBegin(GL2.GL_POLYGON); //left
+		gl.glVertex3f(-0.33f + xOff, 0.2f + yOff, zOff);
+		gl.glVertex3f(-0.33f + xOff, 0.15f + yOff, -0.1f + zOff);
+		gl.glVertex3f(-0.33f + xOff, 0.1f + yOff, zOff);
+		gl.glEnd();
+		
+		gl.glBegin(GL2.GL_POLYGON); //right
+		gl.glVertex3f(0.33f + xOff, 0.2f + yOff, zOff);
+		gl.glVertex3f(0.33f + xOff, 0.15f + yOff, -0.1f + zOff);
+		gl.glVertex3f(0.33f + xOff, 0.1f + yOff, zOff);
 		gl.glEnd();
 		
 	}
