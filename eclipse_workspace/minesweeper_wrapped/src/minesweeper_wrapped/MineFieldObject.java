@@ -18,47 +18,47 @@ public class MineFieldObject {
 		yIndexSelected = -0.67f;
 		zIndexSelected = 0.67f;
 		// bottom
-		minefield.add(new MineObject(-0.67f, -0.67f, 0.67f, true));
-		minefield.add(new MineObject(0f, -0.67f, 0.67f, false));
-		minefield.add(new MineObject(0.67f, -0.67f, 0.67f, false));
+		minefield.add(new MineObject(-0.67f, -0.67f, 0.67f, true, 0));
+		minefield.add(new MineObject(0f, -0.67f, 0.67f, false, 2));
+		minefield.add(new MineObject(0.67f, -0.67f, 0.67f, false, 10)); // 10 == bomb
 
-		minefield.add(new MineObject(-0.67f, -0.67f, 0f, false));
-		minefield.add(new MineObject(0f, -0.67f, 0f, false));
-		minefield.add(new MineObject(0.67f, -0.67f, 0f, false));
+		minefield.add(new MineObject(-0.67f, -0.67f, 0f, false, 0));
+		minefield.add(new MineObject(0f, -0.67f, 0f, false, 2));
+		minefield.add(new MineObject(0.67f, -0.67f, 0f, false, 2));
 
-		minefield.add(new MineObject(-0.67f, -0.67f, -0.67f, false));
-		minefield.add(new MineObject(0f, -0.67f, -0.67f, false));
-		minefield.add(new MineObject(0.67f, -0.67f, -0.67f, false));
+		minefield.add(new MineObject(-0.67f, -0.67f, -0.67f, false, 0));
+		minefield.add(new MineObject(0f, -0.67f, -0.67f, false, 0));
+		minefield.add(new MineObject(0.67f, -0.67f, -0.67f, false, 0));
 
 		// end bottom
 
 		// middle
-		minefield.add(new MineObject(-0.67f, 0f, 0.67f, false));
-		minefield.add(new MineObject(0f, 0f, 0.67f, false));
-		minefield.add(new MineObject(0.67f, 0f, 0.67f, false));
+		minefield.add(new MineObject(-0.67f, 0f, 0.67f, false, 1));
+		minefield.add(new MineObject(0f, 0f, 0.67f, false, 3));
+		minefield.add(new MineObject(0.67f, 0f, 0.67f, false, 10));
 
-		minefield.add(new MineObject(-0.67f, 0f, 0f, false));
-		minefield.add(new MineObject(0f, 0f, 0f, false));
-		minefield.add(new MineObject(0.67f, 0f, 0f, false));
+		minefield.add(new MineObject(-0.67f, 0f, 0f, false, 2));
+		minefield.add(new MineObject(0f, 0f, 0f, false, 0));
+		minefield.add(new MineObject(0.67f, 0f, 0f, false, 3));
 
-		minefield.add(new MineObject(-0.67f, 0f, -0.67f, false));
-		minefield.add(new MineObject(0f, 0f, -0.67f, false));
-		minefield.add(new MineObject(0.67f, 0f, -0.67f, false));
+		minefield.add(new MineObject(-0.67f, 0f, -0.67f, false, 2));
+		minefield.add(new MineObject(0f, 0f, -0.67f, false, 2));
+		minefield.add(new MineObject(0.67f, 0f, -0.67f, false, 1));
 
 		// end middle
 
 		// top 
-		minefield.add(new MineObject(-0.67f, 0.67f, 0.67f, false));
-		minefield.add(new MineObject(0f, 0.67f, 0.67f, false));
-		minefield.add(new MineObject(0.67f, 0.67f, 0.67f, false));
+		minefield.add(new MineObject(-0.67f, 0.67f, 0.67f, false, 1));
+		minefield.add(new MineObject(0f, 0.67f, 0.67f, false, 2));
+		minefield.add(new MineObject(0.67f, 0.67f, 0.67f, false, 2));
 
-		minefield.add(new MineObject(-0.67f, 0.67f, 0f, false));
-		minefield.add(new MineObject(0f, 0.67f, 0f, false));
-		minefield.add(new MineObject(0.67f, 0.67f, 0f, false));
+		minefield.add(new MineObject(-0.67f, 0.67f, 0f, false, 2));
+		minefield.add(new MineObject(0f, 0.67f, 0f, false, 10));
+		minefield.add(new MineObject(0.67f, 0.67f, 0f, false, 2));
 
-		minefield.add(new MineObject(-0.67f, 0.67f, -0.67f, false));
-		minefield.add(new MineObject(0f, 0.67f, -0.67f, false));
-		minefield.add(new MineObject(0.67f, 0.67f, -0.67f, false));
+		minefield.add(new MineObject(-0.67f, 0.67f, -0.67f, false, 10));
+		minefield.add(new MineObject(0f, 0.67f, -0.67f, false, 2));
+		minefield.add(new MineObject(0.67f, 0.67f, -0.67f, false, 1));
 		// end top
 	}
 

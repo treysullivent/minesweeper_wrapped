@@ -52,7 +52,7 @@ public class Cube implements GLEventListener {
 		gl.glRotatef(zquad, 0.0f, 0.0f, 1.0f);
 
 		// draw the cubes in the field
-		mainCube.getMineField().forEach((n) -> drawCube(gl, n.getXOffset(), n.getYOffset(), n.getZOffset(), n.getSelected(), n.getHasBeenMined(), n.getHasBeenFlagged()) ); 
+		mainCube.getMineField().forEach((n) -> drawCube(gl, n.getXOffset(), n.getYOffset(), n.getZOffset(), n.getSelected(), n.getHasBeenMined(), n.getHasBeenFlagged(), n.getNumAdjacentBombs()) ); 
 
 		// still drawing the lines ebcause it looks good
 		drawLines(gl);
@@ -403,9 +403,15 @@ public class Cube implements GLEventListener {
 		gl.glEnd();
 	}
 
-	public void drawCube(GL2 gl, float xOff, float yOff, float zOff, boolean selected, boolean mined, boolean flagged) {
+	public void drawCube(GL2 gl, float xOff, float yOff, float zOff, boolean selected, boolean mined, boolean flagged, int numAdjacentBombs) {
 
-		// doesn't draw the cube if it's been mined
+		// doesn't draw the cube if there is a bomb
+		if (mined && numAdjacentBombs == 10)
+		{
+			drawBomb(gl, xOff, yOff, zOff);
+			return;
+		}
+		
 		gl.glBegin(GL2.GL_QUADS); // Start Drawing The Cube
 
 		if(selected) gl.glColor3f(1.0f, 0.6f, 0f); // make orange if selected
@@ -454,8 +460,7 @@ public class Cube implements GLEventListener {
 		
 		if(mined) 
 		{
-			//drawNumber(gl, xOff, yOff, zOff);
-			drawZero(gl, xOff, yOff, zOff);
+			drawNumber(gl, xOff, yOff, zOff, numAdjacentBombs);
 			return;
 		}
 		
@@ -467,52 +472,24 @@ public class Cube implements GLEventListener {
 
 	}
 
-	public void drawNumber(GL2 gl, float xOff, float yOff, float zOff)
+	public void drawNumber(GL2 gl, float xOff, float yOff, float zOff, int numBombs)
 	{
-		gl.glBegin(GL2.GL_POLYGON);
-		gl.glColor3f(0, 0, 0);
-
-		gl.glVertex3f(0.1f + xOff, 0.33f + yOff, -0.2f + zOff); // Top Right Of The Quad (Top)
-		gl.glVertex3f(-0.1f + xOff, 0.33f + yOff, -0.2f + zOff); // Top Left Of The Quad (Top)
-		gl.glVertex3f(-0.1f + xOff, 0.33f + yOff, 0.2f + zOff); // Bottom Left Of The Quad (Top)
-		gl.glVertex3f(0.1f + xOff, 0.33f + yOff, 0.2f + zOff); // Bottom Right Of The Quad (Top)
-		gl.glEnd();
-
-		gl.glBegin(GL2.GL_POLYGON);		// bottom 
-		gl.glVertex3f(0.1f + xOff, -0.2f + yOff, 0.33f + zOff); // Top Right Of The Quad 
-		gl.glVertex3f(-0.1f + xOff, -0.2f + yOff, 0.33f + zOff); // Top Left Of The Quad 
-		gl.glVertex3f(-0.1f + xOff, -0.2f + yOff, -0.33f + zOff); // Bottom Left Of The Quad 
-		gl.glVertex3f(0.1f + xOff, -0.2f + yOff, -0.33f + zOff); // Bottom Right Of The Quad
-		gl.glEnd();
-
-		gl.glBegin(GL2.GL_POLYGON);		// front 
-		gl.glVertex3f(0.1f + xOff, 0.2f + yOff, 0.33f + zOff); 
-		gl.glVertex3f(-0.1f + xOff, 0.2f + yOff, 0.33f + zOff);  
-		gl.glVertex3f(-0.1f + xOff, -0.2f + yOff, 0.33f + zOff); 
-		gl.glVertex3f(0.1f + xOff, -0.2f + yOff, 0.33f + zOff); 
-		gl.glEnd();
-
-		gl.glBegin(GL2.GL_POLYGON);		//  back 
-		gl.glVertex3f(0.1f + xOff, -0.2f + yOff, -0.33f + zOff);  
-		gl.glVertex3f(-0.1f + xOff, -0.2f + yOff, -0.33f + zOff);  
-		gl.glVertex3f(-0.1f + xOff, 0.2f + yOff, -0.33f + zOff); 
-		gl.glVertex3f(0.1f + xOff, 0.2f + yOff, -0.33f + zOff); 
-		gl.glEnd();
-
-		gl.glBegin(GL2.GL_POLYGON);		//left
-		gl.glVertex3f(-0.33f + xOff, 0.1f + yOff, 0.2f + zOff);  
-		gl.glVertex3f(-0.33f + xOff, 0.1f + yOff, -0.2f + zOff);  
-		gl.glVertex3f(-0.33f + xOff, -0.1f + yOff, -0.2f + zOff); 
-		gl.glVertex3f(-0.33f + xOff, -0.1f + yOff, 0.2f + zOff); 
-		gl.glEnd();
-
-		gl.glBegin(GL2.GL_POLYGON);		//  right
-		gl.glVertex3f(0.33f + xOff, 0.1f + yOff, -0.2f + zOff);  
-		gl.glVertex3f(0.33f + xOff, 0.1f + yOff, 0.2f + zOff);  
-		gl.glVertex3f(0.33f + xOff, -0.1f + yOff, 0.2f + zOff); 
-		gl.glVertex3f(0.33f + xOff, -0.1f + yOff, -0.2f + zOff); 
-		gl.glEnd();
-
+		if (numBombs == 0)
+		{
+			drawZero(gl, xOff, yOff, zOff);
+		}
+		else if (numBombs == 1)
+		{
+			drawOne(gl, xOff, yOff, zOff);
+		}
+		else if (numBombs == 2)
+		{
+			drawTwo(gl, xOff, yOff, zOff);
+		}
+		else if (numBombs == 3)
+		{
+			drawThree(gl, xOff, yOff, zOff);
+		}
 	}
 	
 	public void drawZero(GL2 gl, float xOff, float yOff, float zOff) 
@@ -778,7 +755,43 @@ public class Cube implements GLEventListener {
 		gl.glVertex3f(0.33f + xOff, 0.15f + yOff, -0.1f + zOff);
 		gl.glVertex3f(0.33f + xOff, 0.1f + yOff, zOff);
 		gl.glEnd();
+	}
+	
+	public void drawBomb(GL2 gl, float xOff, float yOff, float zOff)
+	{
+		double dt = 1.0 / 32.0;
+		gl.glColor3f(0, 0, 0);
+		gl.glBegin(GL2.GL_POLYGON);
+		double r = 0.2f;
+		for (double t = 0.0; t < 1.0; t += dt)
+		{
+			double x = r * Math.cos(2 * Math.PI * t);
+			double y = r * Math.sin(2 * Math.PI * t);
+			
+			gl.glVertex3d(x + xOff, y + yOff, zOff);
+		}
+		gl.glEnd();
 		
+		gl.glBegin(GL2.GL_POLYGON);
+		for (double t = 0.0; t < 1.0; t += dt)
+		{
+			double z = r * Math.cos(2 * Math.PI * t);
+			double y = r * Math.sin(2 * Math.PI * t);
+			
+			gl.glVertex3d(xOff, y + yOff, z + zOff);
+		}
+		gl.glEnd();
+		
+		gl.glBegin(GL2.GL_POLYGON);
+		for (double t = 0.0; t < 1.0; t += dt)
+		{
+			double z = r * Math.cos(2 * Math.PI * t);
+			double x = r * Math.sin(2 * Math.PI * t);
+			
+			gl.glVertex3d(x + xOff, yOff, z + zOff);
+		}
+		gl.glEnd();
+
 	}
 
 

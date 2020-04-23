@@ -14,14 +14,16 @@ public class MineObject {
 	private boolean hasBeenMined = false;
 	
 	private boolean flagged = false;
-	private int numAdjacentBombs;
+	private int numAdjacentBombs; // 10 == bomb
 	
-	public MineObject(float x, float y, float z, boolean isChosen) {
+	public MineObject(float x, float y, float z, boolean isChosen, int bombs) {
 		xOff = x;
 		yOff = y;
 		zOff = z;
 		
 		selected = isChosen;
+		
+		numAdjacentBombs = bombs;
 	}
 	
 	// getters
@@ -51,6 +53,11 @@ public class MineObject {
 	{
 		return flagged;
 	}
+	
+	public int getNumAdjacentBombs()
+	{
+		return numAdjacentBombs;
+	}
 	// setters
 	
 	public void toggleSelected() 
@@ -66,5 +73,10 @@ public class MineObject {
 	public void toggleFlagged()
 	{
 		flagged = true;
+	}
+	
+	public void setNumAdjacentBombs(int num)
+	{
+		numAdjacentBombs = num;
 	}
 }
