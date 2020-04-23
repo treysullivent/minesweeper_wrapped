@@ -450,7 +450,7 @@ public class Cube implements GLEventListener {
 		if(mined) 
 		{
 			//drawNumber(gl, xOff, yOff, zOff);
-			drawTwo(gl, xOff, yOff, zOff);
+			drawZero(gl, xOff, yOff, zOff);
 			return;
 		}
 
@@ -502,6 +502,52 @@ public class Cube implements GLEventListener {
 		gl.glVertex3f(0.33f + xOff, -0.1f + yOff, -0.2f + zOff); 
 		gl.glEnd();
 
+	}
+	
+	public void drawZero(GL2 gl, float xOff, float yOff, float zOff) 
+	{
+		gl.glColor3f(0.5f, 0.5f, 0.5f); // gray
+		gl.glBegin(GL.GL_LINE_LOOP); //front
+		gl.glVertex3f(-0.2f + xOff, 0.2f + yOff, .33f + zOff);
+		gl.glVertex3f(0.2f + xOff, 0.2f + yOff, .33f + zOff);
+		gl.glVertex3f(0.2f + xOff, -0.2f + yOff, .33f + zOff);
+		gl.glVertex3f(-0.2f + xOff, -0.2f + yOff, .33f + zOff);
+		gl.glEnd();
+		
+		gl.glBegin(GL.GL_LINE_LOOP); //bottom
+		gl.glVertex3f(-0.2f + xOff, -0.33f + yOff, 0.2f + zOff);
+		gl.glVertex3f(0.2f + xOff, -0.33f + yOff, 0.2f + zOff);
+		gl.glVertex3f(0.2f + xOff, -0.33f + yOff, -0.2f + zOff);
+		gl.glVertex3f(-0.2f + xOff, -0.33f + yOff, -0.2f + zOff);
+		gl.glEnd();
+		
+		gl.glBegin(GL.GL_LINE_LOOP); //top
+		gl.glVertex3f(0.2f + xOff, 0.33f + yOff, 0.2f + zOff);
+		gl.glVertex3f(-0.2f + xOff, 0.33f + yOff, 0.2f + zOff);
+		gl.glVertex3f(-0.2f + xOff, 0.33f + yOff, -0.2f + zOff);
+		gl.glVertex3f(0.2f + xOff, 0.33f + yOff, -0.2f + zOff);
+		gl.glEnd();
+		
+		gl.glBegin(GL.GL_LINE_LOOP); //back
+		gl.glVertex3f(0.2f + xOff, 0.2f + yOff, -.33f + zOff);
+		gl.glVertex3f(-0.2f + xOff, 0.2f + yOff, -.33f + zOff);
+		gl.glVertex3f(-0.2f + xOff, -0.2f + yOff, -.33f + zOff);
+		gl.glVertex3f(0.2f + xOff, -0.2f + yOff, -.33f + zOff);
+		gl.glEnd();
+		
+		gl.glBegin(GL.GL_LINE_LOOP); //left
+		gl.glVertex3f(-0.33f + xOff, 0.2f + yOff, -0.2f + zOff);
+		gl.glVertex3f(-0.33f + xOff, 0.2f + yOff, 0.2f + zOff);
+		gl.glVertex3f(-0.33f + xOff, -0.2f + yOff, 0.2f + zOff);
+		gl.glVertex3f(-0.33f + xOff, -0.2f + yOff, -0.2f + zOff);
+		gl.glEnd();
+		
+		gl.glBegin(GL.GL_LINE_LOOP); //right
+		gl.glVertex3f(0.33f + xOff, 0.2f + yOff, 0.2f + zOff);
+		gl.glVertex3f(0.33f + xOff, 0.2f + yOff, -0.2f + zOff);
+		gl.glVertex3f(0.33f + xOff, -0.2f + yOff, -0.2f + zOff);
+		gl.glVertex3f(0.33f + xOff, -0.2f + yOff, 0.2f + zOff);
+		gl.glEnd();
 	}
 	
 	public void drawOne(GL2 gl, float xOff, float yOff, float zOff)
