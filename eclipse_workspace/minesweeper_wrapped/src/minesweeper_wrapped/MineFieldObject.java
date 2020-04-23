@@ -227,18 +227,65 @@ public class MineFieldObject {
 					if(minefield.get(i).getZOffset() == zIndexSelected) 
 					{
 						minefield.get(i).toggleFlagged();
-						changeSelectedMine(i);
+						//changeSelectedMine(i);
 						return;
 					}
 				}
 			}
 		}
 	}
+	
+	public static boolean checkForBomb()
+	{
+		int length = minefield.size();
+
+		for(int i = 0; i < length; i++) 
+		{
+			if(minefield.get(i).getXOffset() == xIndexSelected) 
+			{
+				if(minefield.get(i).getYOffset() == yIndexSelected) 
+				{
+					if(minefield.get(i).getZOffset() == zIndexSelected) 
+					{
+						int bombs = minefield.get(i).getNumAdjacentBombs();
+						if(minefield.get(i).getNumAdjacentBombs() == 10)
+						{
+							return true;
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
+	
+	public static boolean alreadyFlagged()
+	{
+		int length = minefield.size();
+
+		for(int i = 0; i < length; i++) 
+		{
+			if(minefield.get(i).getXOffset() == xIndexSelected) 
+			{
+				if(minefield.get(i).getYOffset() == yIndexSelected) 
+				{
+					if(minefield.get(i).getZOffset() == zIndexSelected) 
+					{
+						if(minefield.get(i).getHasBeenFlagged())
+						{
+							return true;
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
 
 	//private methods for data manipulation
 
 	// check if the block at location x, y, z has been mined or not
-	private static boolean checkMembership(float x, float y, float z) {
+	public static boolean checkMembership(float x, float y, float z) {
 		int length = minefield.size();
 
 		for(int i = 0; i < length; i++) 

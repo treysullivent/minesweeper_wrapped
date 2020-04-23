@@ -7,6 +7,8 @@ import com.jogamp.opengl.*;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.FPSAnimator;
+import com.jogamp.opengl.util.awt.TextRenderer;
+
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
@@ -14,6 +16,8 @@ import javax.swing.JFrame;
 
 public class Cube implements GLEventListener {
 
+	private static int score = 0;
+	private TextRenderer renderer;
 	public static DisplayMode dm, dm_old;
 	private GLU glu = new GLU();
 	private static float xquad = 0.0f;
@@ -63,6 +67,13 @@ public class Cube implements GLEventListener {
 		yquad += yrot;
 		zquad += zrot;
 
+		if (score == 4)
+		{
+			renderer.beginRendering(800, 800);
+			renderer.setColor(Color.white);		// Light gray
+			renderer.draw("You Win!", 300, 650);	// Upper left corner
+			renderer.endRendering();
+		}
 	}
 
 
@@ -70,6 +81,7 @@ public class Cube implements GLEventListener {
 	@Override
 	public void dispose(GLAutoDrawable drawable) {
 		// TODO Auto-generated method stub
+		renderer = null;
 	}
 
 	@Override
@@ -81,7 +93,10 @@ public class Cube implements GLEventListener {
 		gl.glEnable(GL2.GL_DEPTH_TEST);
 		gl.glDepthFunc(GL2.GL_LEQUAL);
 		gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL2.GL_NICEST);
+		renderer = new TextRenderer(new Font("Monospaced", Font.BOLD, 36),
+				true, true);
 	}
+
 
 	@Override
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
@@ -211,10 +226,18 @@ public class Cube implements GLEventListener {
 				{
 					MineFieldObject.changeMinedStatus();	
 				}
-				
+
 				if (e.getKeyCode() == KeyEvent.VK_F)
 				{
+					if (MineFieldObject.alreadyFlagged())
+					{
+						return;
+					}
 					MineFieldObject.changeFlaggedStatus();
+					if (MineFieldObject.checkForBomb() == true)
+					{
+						score ++;
+					}
 				}
 
 			}
@@ -409,9 +432,10 @@ public class Cube implements GLEventListener {
 		if (mined && numAdjacentBombs == 10)
 		{
 			drawBomb(gl, xOff, yOff, zOff);
+			drawLoseText();
 			return;
 		}
-		
+
 		gl.glBegin(GL2.GL_QUADS); // Start Drawing The Cube
 
 		if(selected) gl.glColor3f(1.0f, 0.6f, 0f); // make orange if selected
@@ -457,13 +481,13 @@ public class Cube implements GLEventListener {
 
 
 		gl.glEnd(); // Done Drawing The Quad
-		
+
 		if(mined) 
 		{
 			drawNumber(gl, xOff, yOff, zOff, numAdjacentBombs);
 			return;
 		}
-		
+
 		if(flagged)
 		{
 			drawFlag(gl, xOff, yOff, zOff);
@@ -491,7 +515,7 @@ public class Cube implements GLEventListener {
 			drawThree(gl, xOff, yOff, zOff);
 		}
 	}
-	
+
 	public void drawZero(GL2 gl, float xOff, float yOff, float zOff) 
 	{
 		gl.glColor3f(0.5f, 0.5f, 0.5f); // gray
@@ -501,35 +525,35 @@ public class Cube implements GLEventListener {
 		gl.glVertex3f(0.2f + xOff, -0.2f + yOff, .33f + zOff);
 		gl.glVertex3f(-0.2f + xOff, -0.2f + yOff, .33f + zOff);
 		gl.glEnd();
-		
+
 		gl.glBegin(GL.GL_LINE_LOOP); //bottom
 		gl.glVertex3f(-0.2f + xOff, -0.33f + yOff, 0.2f + zOff);
 		gl.glVertex3f(0.2f + xOff, -0.33f + yOff, 0.2f + zOff);
 		gl.glVertex3f(0.2f + xOff, -0.33f + yOff, -0.2f + zOff);
 		gl.glVertex3f(-0.2f + xOff, -0.33f + yOff, -0.2f + zOff);
 		gl.glEnd();
-		
+
 		gl.glBegin(GL.GL_LINE_LOOP); //top
 		gl.glVertex3f(0.2f + xOff, 0.33f + yOff, 0.2f + zOff);
 		gl.glVertex3f(-0.2f + xOff, 0.33f + yOff, 0.2f + zOff);
 		gl.glVertex3f(-0.2f + xOff, 0.33f + yOff, -0.2f + zOff);
 		gl.glVertex3f(0.2f + xOff, 0.33f + yOff, -0.2f + zOff);
 		gl.glEnd();
-		
+
 		gl.glBegin(GL.GL_LINE_LOOP); //back
 		gl.glVertex3f(0.2f + xOff, 0.2f + yOff, -.33f + zOff);
 		gl.glVertex3f(-0.2f + xOff, 0.2f + yOff, -.33f + zOff);
 		gl.glVertex3f(-0.2f + xOff, -0.2f + yOff, -.33f + zOff);
 		gl.glVertex3f(0.2f + xOff, -0.2f + yOff, -.33f + zOff);
 		gl.glEnd();
-		
+
 		gl.glBegin(GL.GL_LINE_LOOP); //left
 		gl.glVertex3f(-0.33f + xOff, 0.2f + yOff, -0.2f + zOff);
 		gl.glVertex3f(-0.33f + xOff, 0.2f + yOff, 0.2f + zOff);
 		gl.glVertex3f(-0.33f + xOff, -0.2f + yOff, 0.2f + zOff);
 		gl.glVertex3f(-0.33f + xOff, -0.2f + yOff, -0.2f + zOff);
 		gl.glEnd();
-		
+
 		gl.glBegin(GL.GL_LINE_LOOP); //right
 		gl.glVertex3f(0.33f + xOff, 0.2f + yOff, 0.2f + zOff);
 		gl.glVertex3f(0.33f + xOff, 0.2f + yOff, -0.2f + zOff);
@@ -537,7 +561,7 @@ public class Cube implements GLEventListener {
 		gl.glVertex3f(0.33f + xOff, -0.2f + yOff, 0.2f + zOff);
 		gl.glEnd();
 	}
-	
+
 	public void drawOne(GL2 gl, float xOff, float yOff, float zOff)
 	{
 		gl.glColor3f(0, 0, 1); // blue
@@ -545,33 +569,33 @@ public class Cube implements GLEventListener {
 		gl.glVertex3f(xOff, 0.2f + yOff, .33f + zOff);
 		gl.glVertex3f(xOff, -0.2f + yOff, .33f + zOff);
 		gl.glEnd();
-		
+
 		gl.glBegin(GL.GL_LINE_STRIP); //bottom
 		gl.glVertex3f(xOff, -0.33f + yOff, 0.2f + zOff);
 		gl.glVertex3f(xOff, -0.33f + yOff, -0.2f + zOff);
 		gl.glEnd();
-		
+
 		gl.glBegin(GL.GL_LINE_STRIP); //top
 		gl.glVertex3f(xOff, 0.33f + yOff, 0.2f + zOff);
 		gl.glVertex3f(xOff, 0.33f + yOff, -0.2f + zOff);
 		gl.glEnd();
-		
+
 		gl.glBegin(GL.GL_LINE_STRIP); //back
 		gl.glVertex3f(xOff, 0.2f + yOff, -.33f + zOff);
 		gl.glVertex3f(xOff, -0.2f + yOff, -.33f + zOff);
 		gl.glEnd();
-		
+
 		gl.glBegin(GL.GL_LINE_STRIP); //left
 		gl.glVertex3f(-0.33f + xOff, 0.2f + yOff, zOff);
 		gl.glVertex3f(-0.33f + xOff, -0.2f + yOff, zOff);
 		gl.glEnd();
-		
+
 		gl.glBegin(GL.GL_LINE_STRIP); //right
 		gl.glVertex3f(0.33f + xOff, 0.2f + yOff, zOff);
 		gl.glVertex3f(0.33f + xOff, -0.2f + yOff, zOff);
 		gl.glEnd();
 	}
-	
+
 	public void drawTwo(GL2 gl, float xOff, float yOff, float zOff)
 	{
 		gl.glColor3f(0, 1, 0); // green
@@ -583,7 +607,7 @@ public class Cube implements GLEventListener {
 		gl.glVertex3f(-0.2f + xOff, -0.2f + yOff, .33f + zOff);
 		gl.glVertex3f(0.2f + xOff, -0.2f + yOff, .33f + zOff);
 		gl.glEnd();
-		
+
 		gl.glBegin(GL.GL_LINE_STRIP); //bottom
 		gl.glVertex3f(-0.2f + xOff, -0.33f + yOff, 0.2f + zOff);
 		gl.glVertex3f(0.2f + xOff, -0.33f + yOff, 0.2f + zOff);
@@ -592,7 +616,7 @@ public class Cube implements GLEventListener {
 		gl.glVertex3f(-0.2f + xOff, -0.33f + yOff, -0.2f + zOff);
 		gl.glVertex3f(0.2f + xOff, -0.33f + yOff, -0.2f + zOff);
 		gl.glEnd();
-		
+
 		gl.glBegin(GL.GL_LINE_STRIP); //top
 		gl.glVertex3f(0.2f + xOff, 0.33f + yOff, 0.2f + zOff);
 		gl.glVertex3f(-0.2f + xOff, 0.33f + yOff, 0.2f + zOff);
@@ -601,7 +625,7 @@ public class Cube implements GLEventListener {
 		gl.glVertex3f(0.2f + xOff, 0.33f + yOff, -0.2f + zOff);
 		gl.glVertex3f(-0.2f + xOff, 0.33f + yOff, -0.2f + zOff);
 		gl.glEnd();
-		
+
 		gl.glBegin(GL.GL_LINE_STRIP); //back
 		gl.glVertex3f(0.2f + xOff, 0.2f + yOff, -.33f + zOff);
 		gl.glVertex3f(-0.2f + xOff, 0.2f + yOff, -.33f + zOff);
@@ -610,7 +634,7 @@ public class Cube implements GLEventListener {
 		gl.glVertex3f(0.2f + xOff, -0.2f + yOff, -.33f + zOff);
 		gl.glVertex3f(-0.2f + xOff, -0.2f + yOff, -.33f + zOff);
 		gl.glEnd();
-		
+
 		gl.glBegin(GL.GL_LINE_STRIP); //left
 		gl.glVertex3f(-0.33f + xOff, 0.2f + yOff, -0.2f + zOff);
 		gl.glVertex3f(-0.33f + xOff, 0.2f + yOff, 0.2f + zOff);
@@ -619,7 +643,7 @@ public class Cube implements GLEventListener {
 		gl.glVertex3f(-0.33f + xOff, -0.2f + yOff, -0.2f + zOff);
 		gl.glVertex3f(-0.33f + xOff, -0.2f + yOff, 0.2f + zOff);
 		gl.glEnd();
-		
+
 		gl.glBegin(GL.GL_LINE_STRIP); //right
 		gl.glVertex3f(0.33f + xOff, 0.2f + yOff, 0.2f + zOff);
 		gl.glVertex3f(0.33f + xOff, 0.2f + yOff, -0.2f + zOff);
@@ -629,11 +653,11 @@ public class Cube implements GLEventListener {
 		gl.glVertex3f(0.33f + xOff, -0.2f + yOff, -0.2f + zOff);
 		gl.glEnd();
 	}
-	
+
 	public void drawThree(GL2 gl, float xOff, float yOff, float zOff)
 	{
 		gl.glColor3f(1, 0, 0); //red
-		
+
 		gl.glBegin(GL.GL_LINE_STRIP); //front
 		gl.glVertex3f(-0.2f + xOff, 0.2f + yOff, .33f + zOff);
 		gl.glVertex3f(0.2f + xOff, 0.2f + yOff, .33f + zOff);
@@ -643,7 +667,7 @@ public class Cube implements GLEventListener {
 		gl.glVertex3f(0.2f + xOff, -0.2f + yOff, .33f + zOff);
 		gl.glVertex3f(-0.2f + xOff, -0.2f + yOff, .33f + zOff);
 		gl.glEnd();
-		
+
 		gl.glBegin(GL.GL_LINE_STRIP); //bottom
 		gl.glVertex3f(-0.2f + xOff, -0.33f + yOff, 0.2f + zOff);
 		gl.glVertex3f(0.2f + xOff, -0.33f + yOff, 0.2f + zOff);
@@ -653,7 +677,7 @@ public class Cube implements GLEventListener {
 		gl.glVertex3f(0.2f + xOff, -0.33f + yOff, -0.2f + zOff);
 		gl.glVertex3f(-0.2f + xOff, -0.33f + yOff, -0.2f + zOff);
 		gl.glEnd();
-		
+
 		gl.glBegin(GL.GL_LINE_STRIP); //top
 		gl.glVertex3f(-0.2f + xOff, 0.33f + yOff, 0.2f + zOff);
 		gl.glVertex3f(0.2f + xOff, 0.33f + yOff, 0.2f + zOff);
@@ -663,7 +687,7 @@ public class Cube implements GLEventListener {
 		gl.glVertex3f(0.2f + xOff, 0.33f + yOff, -0.2f + zOff);
 		gl.glVertex3f(-0.2f + xOff, 0.33f + yOff, -0.2f + zOff);
 		gl.glEnd();
-		
+
 		gl.glBegin(GL.GL_LINE_STRIP); //left
 		gl.glVertex3f(-0.33f + xOff, 0.2f + yOff, -0.2f + zOff);
 		gl.glVertex3f(-0.33f + xOff, 0.2f + yOff, 0.2f + zOff);
@@ -673,7 +697,7 @@ public class Cube implements GLEventListener {
 		gl.glVertex3f(-0.33f + xOff, -0.2f + yOff, 0.2f + zOff);
 		gl.glVertex3f(-0.33f + xOff, -0.2f + yOff, -0.2f + zOff);
 		gl.glEnd();
-		
+
 		gl.glBegin(GL.GL_LINE_STRIP); //right
 		gl.glVertex3f(0.33f + xOff, 0.2f + yOff, 0.2f + zOff);
 		gl.glVertex3f(0.33f + xOff, 0.2f + yOff, -0.2f + zOff);
@@ -684,7 +708,7 @@ public class Cube implements GLEventListener {
 		gl.glVertex3f(0.33f + xOff, -0.2f + yOff, 0.2f + zOff);
 		gl.glEnd();
 	}
-	
+
 	public void drawFlag(GL2 gl, float xOff, float yOff, float zOff)
 	{
 		gl.glColor3f(1, 1, 1);
@@ -692,71 +716,71 @@ public class Cube implements GLEventListener {
 		gl.glVertex3f(xOff, 0.2f + yOff, .33f + zOff);
 		gl.glVertex3f(xOff, -0.2f + yOff, .33f + zOff);
 		gl.glEnd();
-		
+
 		gl.glBegin(GL.GL_LINE_STRIP); //bottom
 		gl.glVertex3f(xOff, -0.33f + yOff, 0.2f + zOff);
 		gl.glVertex3f(xOff, -0.33f + yOff, -0.2f + zOff);
 		gl.glEnd();
-		
+
 		gl.glBegin(GL.GL_LINE_STRIP); //top
 		gl.glVertex3f(xOff, 0.33f + yOff, 0.2f + zOff);
 		gl.glVertex3f(xOff, 0.33f + yOff, -0.2f + zOff);
 		gl.glEnd();
-		
+
 		gl.glBegin(GL.GL_LINE_STRIP); //back
 		gl.glVertex3f(xOff, 0.2f + yOff, -.33f + zOff);
 		gl.glVertex3f(xOff, -0.2f + yOff, -.33f + zOff);
 		gl.glEnd();
-		
+
 		gl.glBegin(GL.GL_LINE_STRIP); //left
 		gl.glVertex3f(-0.33f + xOff, 0.2f + yOff, zOff);
 		gl.glVertex3f(-0.33f + xOff, -0.2f + yOff, zOff);
 		gl.glEnd();
-		
+
 		gl.glBegin(GL.GL_LINE_STRIP); //right
 		gl.glVertex3f(0.33f + xOff, 0.2f + yOff, zOff);
 		gl.glVertex3f(0.33f + xOff, -0.2f + yOff, zOff);
 		gl.glEnd();
-		
-		
+
+
 		gl.glColor3f(1, 0, 0); //red
 		gl.glBegin(GL2.GL_POLYGON); //front
 		gl.glVertex3f(xOff, 0.2f + yOff, .33f + zOff);
 		gl.glVertex3f(-0.2f + xOff, 0.15f + yOff, .33f + zOff);
 		gl.glVertex3f(xOff, 0.1f + yOff, .33f + zOff);
 		gl.glEnd();
-		
+
 		gl.glBegin(GL2.GL_POLYGON); //bottom
 		gl.glVertex3f(xOff, -0.33f + yOff, 0.2f + zOff);
 		gl.glVertex3f(-0.2f + xOff, -0.33f + yOff, 0.15f + zOff);
 		gl.glVertex3f(xOff, -0.33f + yOff, 0.1f + zOff);
 		gl.glEnd();
-		
+
 		gl.glBegin(GL2.GL_POLYGON); //top
 		gl.glVertex3f(xOff, 0.33f + yOff, -0.2f + zOff);
 		gl.glVertex3f(-0.2f + xOff, 0.33f + yOff, -0.15f + zOff);
 		gl.glVertex3f(xOff, 0.33f + yOff, -0.1f + zOff);
 		gl.glEnd();
-		
+
 		gl.glBegin(GL2.GL_POLYGON); //back
 		gl.glVertex3f(xOff, 0.2f + yOff, -.33f + zOff);
 		gl.glVertex3f(-0.1f + xOff, 0.15f + yOff, -.33f + zOff);
 		gl.glVertex3f(xOff, 0.1f + yOff, -.33f + zOff);
 		gl.glEnd();
-		
+
 		gl.glBegin(GL2.GL_POLYGON); //left
 		gl.glVertex3f(-0.33f + xOff, 0.2f + yOff, zOff);
 		gl.glVertex3f(-0.33f + xOff, 0.15f + yOff, -0.1f + zOff);
 		gl.glVertex3f(-0.33f + xOff, 0.1f + yOff, zOff);
 		gl.glEnd();
-		
+
 		gl.glBegin(GL2.GL_POLYGON); //right
 		gl.glVertex3f(0.33f + xOff, 0.2f + yOff, zOff);
 		gl.glVertex3f(0.33f + xOff, 0.15f + yOff, -0.1f + zOff);
 		gl.glVertex3f(0.33f + xOff, 0.1f + yOff, zOff);
 		gl.glEnd();
 	}
-	
+
 	public void drawBomb(GL2 gl, float xOff, float yOff, float zOff)
 	{
 		double dt = 1.0 / 32.0;
@@ -767,31 +791,39 @@ public class Cube implements GLEventListener {
 		{
 			double x = r * Math.cos(2 * Math.PI * t);
 			double y = r * Math.sin(2 * Math.PI * t);
-			
+
 			gl.glVertex3d(x + xOff, y + yOff, zOff);
 		}
 		gl.glEnd();
-		
+
 		gl.glBegin(GL2.GL_POLYGON);
 		for (double t = 0.0; t < 1.0; t += dt)
 		{
 			double z = r * Math.cos(2 * Math.PI * t);
 			double y = r * Math.sin(2 * Math.PI * t);
-			
+
 			gl.glVertex3d(xOff, y + yOff, z + zOff);
 		}
 		gl.glEnd();
-		
+
 		gl.glBegin(GL2.GL_POLYGON);
 		for (double t = 0.0; t < 1.0; t += dt)
 		{
 			double z = r * Math.cos(2 * Math.PI * t);
 			double x = r * Math.sin(2 * Math.PI * t);
-			
+
 			gl.glVertex3d(x + xOff, yOff, z + zOff);
 		}
 		gl.glEnd();
 
+	}
+	
+	private void drawLoseText()
+	{
+		renderer.beginRendering(800, 800);
+		renderer.setColor(Color.white);		// Light gray
+		renderer.draw("You Lose!", 300, 650);	// Upper left corner
+		renderer.endRendering();
 	}
 
 
