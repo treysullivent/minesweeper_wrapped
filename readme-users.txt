@@ -5,6 +5,7 @@ Use W & S to move the selected block along the Y axis
 Use A & D to move the selected block along the X axis
 
 Use the arrow keys to rotate the cube around (The cube can also be moved around by clicking on the upper, lower, right, and left sides of the screens)
+Use Z & X to rotate the cube around its Z axis
 
 Press F to flag a block 
 
